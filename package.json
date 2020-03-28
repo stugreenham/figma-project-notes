@@ -1,7 +1,7 @@
 {
   "name": "figma-project-notes",
   "version": "1.0.0",
-  "description": "Keep your project orgnised with easy titles, footnotes and stickies for your artboards.",
+  "description": "Keep your project organised with easy titles, footnotes and stickies for your artboards.",
   "main": "code.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
