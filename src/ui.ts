@@ -24,6 +24,10 @@ document.getElementById('sticky-red').onclick = () => {
   parent.postMessage({ pluginMessage: { type: 'sticky-red' } }, '*')
 }
 
+document.getElementById('annotation').onclick = () => {
+  parent.postMessage({ pluginMessage: { type: 'annotation' } }, '*')
+}
+
 // Listen out for messages back from the sandbox
 onmessage = e => {
 	//@ts-ignore
