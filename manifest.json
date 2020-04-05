@@ -1,7 +1,7 @@
 {
   "name": "Project Notes",
   "id": "814117528089546244",
-  "api": "1.0.0",
+  "api": "2.0.0",
   "main": "dist/code.js",
   "ui": "dist/ui.html"
 }
