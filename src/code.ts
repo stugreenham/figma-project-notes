@@ -1,12 +1,9 @@
-//figma.showUI(__html__, { width: 190, height: 292 });
 figma.showUI(__html__, { width: 170, height: 338 });
 
 figma.ui.onmessage = async(msg) => {
 
 	await figma.loadFontAsync({ family: "Roboto", style: "Regular" });
 	await figma.loadFontAsync({ family: "Roboto", style: "Bold" });
-	const debug = true;
-
 
 
 	// TITLE
@@ -26,33 +23,33 @@ figma.ui.onmessage = async(msg) => {
 
 			// loop through all the items that are selected
 			for (const node of figma.currentPage.selection) {
-
-				if (debug == true) { console.log(node) }
+				//console.log(node);
 
 				// grab the current selection's x, y, width and name values
-				const selectionX = node.x
-				const selectionY = node.y
-				const selectionWidth = node.width
-				const selectionName = node.name
+				const selectionX = node.x;
+				const selectionY = node.y;
+				const selectionWidth = node.width;
+				const selectionName = node.name;
 
 				// create an array to store the elements
-				const nodes = []
+				const nodes = [];
 
 				// create the line element
-				const line = figma.createLine()
-				line.x = selectionX
-				line.y = selectionY - 100 // set the lines y value to -100px above the selection
-				line.strokeWeight = 4
-				line.resize(selectionWidth, 0)
-				line.strokes = [{type: 'SOLID', color: {r: 0.654901961, g: 0.682352941, b: 0.709803922}}]
-				line.opacity = 0.6
-				nodes.push(line)
+				const line = figma.createLine();
+				line.x = selectionX;
+				line.y = selectionY - 120; // set the lines y value to -100px above the selection
+				line.strokeWeight = 4;
+				line.resize(selectionWidth, 0);
+				line.strokes = [{type: 'SOLID', color: {r: 0.654901961, g: 0.682352941, b: 0.709803922}}];
+				line.opacity = 0.6;
+				nodes.push(line);
 
 				// create the type element
 				const text = figma.createText();
 				text.x = selectionX;
-				text.y = line.y - 130; // set the types y value to -130px from the line's y value
+				text.y = line.y - 110; // set the types y value to -130px from the line's y value
 				text.resize(selectionWidth, 70);
+				text.fontName = { family: "Roboto", style: "Regular" }
 				text.fontSize = 70;
 				text.letterSpacing = {unit: 'PIXELS', value: -1};
 				var textChars = "Web • Frame Title";
@@ -64,11 +61,10 @@ figma.ui.onmessage = async(msg) => {
 				text.setRangeFontName(textBreak, textLen, { family: "Roboto", style: "Bold" } ); // set the text after the • to bold
 				nodes.push(text);
 
-				// group both the line and type element, then append it to the current page
+				// group both the line and type element
 				const group = figma.group(nodes, figma.currentPage);
 				group.name = selectionName + '-title';
 				group.expanded = false;
-				figma.currentPage.appendChild(group);
 
 			}
 		}
@@ -93,8 +89,7 @@ figma.ui.onmessage = async(msg) => {
 
 			// loop through all the items that are selected
 			for (const node of figma.currentPage.selection) {
-
-				if (debug == true) { console.log(node) }
+				//console.log(node);
 
 				// grab the current selection's x, y, width, height and name values
 				const selectionX = node.x
@@ -109,8 +104,9 @@ figma.ui.onmessage = async(msg) => {
 				// create the type element
 				const text = figma.createText();
 				text.x = selectionX;
-				text.y = selectionY + selectionHeight + 50; // set the types y value to 50px below the selection
+				text.y = selectionY + selectionHeight + 80; // set the types y value to 50px below the selection
 				text.resize(selectionWidth, 52);
+				text.fontName = { family: "Roboto", style: "Regular" }
 				text.fontSize = 36;
 				text.characters = "Enter your description or notes here...";
 				text.textAlignVertical = "TOP";
@@ -119,12 +115,10 @@ figma.ui.onmessage = async(msg) => {
 				text.opacity = 0.4
 				nodes.push(text);
 
-				// group the type element, then append it to the current page
+				// group type element
 				const group = figma.group(nodes, figma.currentPage);
-				group.name = selectionName + '-description';
+				group.name = selectionName + '-footnote';
 				group.expanded = false;
-				figma.currentPage.appendChild(group);
-
 			}
 		}
 	}
@@ -168,6 +162,7 @@ figma.ui.onmessage = async(msg) => {
 		text.x = rect.x + 40;
 		text.y = rect.y + 40;
 		text.resize(420, 420);
+		text.fontName = { family: "Roboto", style: "Regular" }
 		text.fontSize = 36;
 		text.paragraphSpacing = 20;
 		text.lineHeight = {unit: 'PIXELS', value: 46};
@@ -184,8 +179,7 @@ figma.ui.onmessage = async(msg) => {
 		frame.y = centerY;
 		frame.appendChild(rect);
 		frame.appendChild(text);
-		frame.name = "Sticky Note"
-		figma.currentPage.appendChild(frame);
+		frame.name = "Sticky Note";
 	}
 
 
@@ -200,27 +194,28 @@ figma.ui.onmessage = async(msg) => {
 		const centerY = figma.viewport.center.y;
 
 		// create an array to store the elements
-		const nodes = []
+		const nodes = [];
 
 		// grab all the existing annotations in the viewport, get the total and add one to set the new annotations count
 		const annotationCount = figma.currentPage.findAll(node => node.type === 'FRAME' && node.name.includes('annotation-')).length + 1;
-		if (debug == true) { console.log(annotationCount) }
+		//console.log(annotationCount);
 
 		// create the counter element
 
 		// create the rectangle for the counter
-		const disc = figma.createRectangle()
+		const disc = figma.createRectangle();
 		disc.resize(24, 24);
 		disc.fills = [{ type: 'SOLID', color: {r: 0, g: 0, b: 0}, opacity: 1 }];
 		disc.constraints = { horizontal: "MIN", vertical: "MIN" };
 		disc.cornerRadius = 12;
-		nodes.push(disc)
+		nodes.push(disc);
 
 		// create the type for the counter
 		const number = figma.createText();
 		number.x = disc.x;
 		number.y = disc.y;
 		number.resize(24, 24);
+		number.fontName = { family: "Roboto", style: "Regular" }
 		number.fontSize = 12;
 		number.lineHeight = {unit: 'PIXELS', value: 12};
 		number.characters = annotationCount.toString();
@@ -233,20 +228,21 @@ figma.ui.onmessage = async(msg) => {
 		// create the content element
 
 		// create the rectangle for the content background
-		const rect = figma.createRectangle()
+		const rect = figma.createRectangle();
 		rect.x = disc.x + 40;
 		rect.y = disc.y;
-		rect.resize(300, 60)
+		rect.resize(300, 60);
 		rect.fills = [{ type: 'SOLID', color: {r: 0, g: 0, b: 0}, opacity: 1 }];
 		rect.constraints = { horizontal: "STRETCH", vertical: "STRETCH" };
 		rect.cornerRadius = 6;
-		nodes.push(rect)
+		nodes.push(rect);
 
 		// create the type for the content text
 		const text = figma.createText();
 		text.x = rect.x + 8;
 		text.y = rect.y + 8;
 		text.resize(284, 44);
+		text.fontName = { family: "Roboto", style: "Regular" }
 		text.fontSize = 14;
 		text.paragraphSpacing = 10;
 		text.lineHeight = {unit: 'PIXELS', value: 20};
@@ -267,7 +263,6 @@ figma.ui.onmessage = async(msg) => {
 		frame.appendChild(rect);
 		frame.appendChild(text);
 		frame.name = "annotation-" + annotationCount; // append the next count to the annotation title
-		figma.currentPage.appendChild(frame);
 	}
 
 }
