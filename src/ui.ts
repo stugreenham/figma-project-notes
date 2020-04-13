@@ -28,6 +28,10 @@ document.getElementById('annotation').onclick = () => {
   parent.postMessage({ pluginMessage: { type: 'annotation' } }, '*')
 }
 
+document.getElementById('annotation-alt').onclick = () => {
+  parent.postMessage({ pluginMessage: { type: 'annotation-alt' } }, '*')
+}
+
 // Listen out for messages back from the sandbox
 onmessage = e => {
 	//@ts-ignore

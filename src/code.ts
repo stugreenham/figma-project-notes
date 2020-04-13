@@ -1,9 +1,10 @@
-figma.showUI(__html__, { width: 170, height: 338 });
+figma.showUI(__html__, { width: 180, height: 384 });
 
 figma.ui.onmessage = async(msg) => {
 
 	await figma.loadFontAsync({ family: "Roboto", style: "Regular" });
 	await figma.loadFontAsync({ family: "Roboto", style: "Bold" });
+	// console.log(msg.type);
 
 
 	// TITLE
@@ -37,7 +38,7 @@ figma.ui.onmessage = async(msg) => {
 				// create the line element
 				const line = figma.createLine();
 				line.x = selectionX;
-				line.y = selectionY - 120; // set the lines y value to -100px above the selection
+				line.y = selectionY - 60; // set the lines y value to -60px above the selection
 				line.strokeWeight = 4;
 				line.resize(selectionWidth, 0);
 				line.strokes = [{type: 'SOLID', color: {r: 0.654901961, g: 0.682352941, b: 0.709803922}}];
@@ -47,18 +48,20 @@ figma.ui.onmessage = async(msg) => {
 				// create the type element
 				const text = figma.createText();
 				text.x = selectionX;
-				text.y = line.y - 110; // set the types y value to -130px from the line's y value
-				text.resize(selectionWidth, 70);
-				text.fontName = { family: "Roboto", style: "Regular" }
-				text.fontSize = 70;
+				text.y = line.y - 75; // set the types y value to -75px from the line's y value
+				text.resize(selectionWidth, 50);
+				//text.fontName = { family: "Roboto", style: "Regular" }
+				text.fontName = { family: "Roboto", style: "Bold" }
+				text.fontSize = 50;
 				text.letterSpacing = {unit: 'PIXELS', value: -1};
-				var textChars = "Web • Frame Title";
+				//var textChars = "Web • Frame Title";
+				var textChars = "Frame Title";
 				text.characters = textChars;
 				text.textAlignVertical = "BOTTOM";
 				text.textAutoResize = "HEIGHT";
-				var textBreak = textChars.indexOf("•") + 1; // get the char number where the • appears and add 1, this is to apply the bold formatting
-				var textLen = textChars.length; // get the total char count
-				text.setRangeFontName(textBreak, textLen, { family: "Roboto", style: "Bold" } ); // set the text after the • to bold
+				//var textBreak = textChars.indexOf("•") + 1; // get the char number where the • appears and add 1, this is to apply the bold formatting
+				//var textLen = textChars.length; // get the total char count
+				//text.setRangeFontName(textBreak, textLen, { family: "Roboto", style: "Bold" } ); // set the text after the • to bold
 				nodes.push(text);
 
 				// group both the line and type element
@@ -104,7 +107,7 @@ figma.ui.onmessage = async(msg) => {
 				// create the type element
 				const text = figma.createText();
 				text.x = selectionX;
-				text.y = selectionY + selectionHeight + 80; // set the types y value to 50px below the selection
+				text.y = selectionY + selectionHeight + 60; // set the types y value to 50px below the selection
 				text.resize(selectionWidth, 52);
 				text.fontName = { family: "Roboto", style: "Regular" }
 				text.fontSize = 36;
@@ -184,7 +187,7 @@ figma.ui.onmessage = async(msg) => {
 
 
 
-	// ANNOTATION
+	// ANNOTATION (LEFT)
 	//-------------------------------
 
 	if (msg.type === 'annotation') {
@@ -229,9 +232,9 @@ figma.ui.onmessage = async(msg) => {
 
 		// create the rectangle for the content background
 		const rect = figma.createRectangle();
-		rect.x = disc.x + 40;
+		rect.x = disc.x + 32;
 		rect.y = disc.y;
-		rect.resize(300, 60);
+		rect.resize(308, 60);
 		rect.fills = [{ type: 'SOLID', color: {r: 0, g: 0, b: 0}, opacity: 1 }];
 		rect.constraints = { horizontal: "STRETCH", vertical: "STRETCH" };
 		rect.cornerRadius = 6;
@@ -239,7 +242,7 @@ figma.ui.onmessage = async(msg) => {
 
 		// create the type for the content text
 		const text = figma.createText();
-		text.x = rect.x + 8;
+		text.x = rect.x + 12;
 		text.y = rect.y + 8;
 		text.resize(284, 44);
 		text.fontName = { family: "Roboto", style: "Regular" }
@@ -264,5 +267,91 @@ figma.ui.onmessage = async(msg) => {
 		frame.appendChild(text);
 		frame.name = "annotation-" + annotationCount; // append the next count to the annotation title
 	}
+
+
+
+	// ANNOTATION (RIGHT)
+	//-------------------------------
+
+	if (msg.type === 'annotation-alt') {
+
+		// grab the x and y values of the current viewport central point
+		const centerX = figma.viewport.center.x;
+		const centerY = figma.viewport.center.y;
+
+		// create an array to store the elements
+		const nodes = [];
+
+		// grab all the existing annotations in the viewport, get the total and add one to set the new annotations count
+		const annotationCount = figma.currentPage.findAll(node => node.type === 'FRAME' && node.name.includes('annotation-')).length + 1;
+		//console.log(annotationCount);
+
+		// create the content element
+
+		// create the rectangle for the content background
+		const rect = figma.createRectangle();
+		//rect.x = disc.x + 40;
+		//rect.y = disc.y;
+		rect.resize(308, 60);
+		rect.fills = [{ type: 'SOLID', color: {r: 0, g: 0, b: 0}, opacity: 1 }];
+		rect.constraints = { horizontal: "STRETCH", vertical: "STRETCH" };
+		rect.cornerRadius = 6;
+		nodes.push(rect);
+
+		// create the type for the content text
+		const text = figma.createText();
+		text.x = rect.x + 12;
+		text.y = rect.y + 8;
+		text.resize(284, 44);
+		text.fontName = { family: "Roboto", style: "Regular" }
+		text.fontSize = 14;
+		text.paragraphSpacing = 10;
+		text.lineHeight = {unit: 'PIXELS', value: 20};
+		text.characters = "Add your annotation content here...";
+		text.fills = [{type: 'SOLID', color: {r: 1, g: 1, b: 1}}];
+		text.textAlignVertical = "TOP";
+		text.constraints = { horizontal: "STRETCH", vertical: "STRETCH" };
+		nodes.push(text);
+
+		// create the counter element
+
+		// create the rectangle for the counter
+		const disc = figma.createRectangle();
+		disc.resize(24, 24);
+		disc.x = rect.x + 316;
+		disc.y = rect.y;
+		disc.fills = [{ type: 'SOLID', color: {r: 0, g: 0, b: 0}, opacity: 1 }];
+		disc.constraints = { horizontal: "MAX", vertical: "MIN" };
+		disc.cornerRadius = 12;
+		nodes.push(disc);
+
+		// create the type for the counter
+		const number = figma.createText();
+		number.x = disc.x;
+		number.y = disc.y;
+		number.resize(24, 24);
+		number.fontName = { family: "Roboto", style: "Regular" }
+		number.fontSize = 12;
+		number.lineHeight = {unit: 'PIXELS', value: 12};
+		number.characters = annotationCount.toString();
+		number.fills = [{type: 'SOLID', color: {r: 1, g: 1, b: 1}}]
+		number.textAlignVertical = "CENTER";
+		number.textAlignHorizontal = "CENTER";
+		number.constraints = { horizontal: "MAX", vertical: "MIN" };
+		nodes.push(number);
+
+		// create a frame element and append the counter and content elements before adding it to the center of the viewport
+		const frame = figma.createFrame();
+		frame.resize(340, 60);
+		frame.x = centerX;
+		frame.y = centerY;
+		frame.fills = [{ type: 'SOLID', color: {r: 0, g: 0, b: 0}, opacity: 0 }];
+		frame.appendChild(disc);
+		frame.appendChild(number);
+		frame.appendChild(rect);
+		frame.appendChild(text);
+		frame.name = "annotation-" + annotationCount; // append the next count to the annotation title
+	}
+
 
 }
