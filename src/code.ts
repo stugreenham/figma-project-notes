@@ -38,17 +38,17 @@ figma.ui.onmessage = async(msg) => {
 				// create the line element
 				const line = figma.createLine();
 				line.x = selectionX;
-				line.y = selectionY - 60; // set the lines y value to -60px above the selection
+				line.y = selectionY - 90; // set the lines y value to -60px above the selection
 				line.strokeWeight = 4;
 				line.resize(selectionWidth, 0);
-				line.strokes = [{type: 'SOLID', color: {r: 0.654901961, g: 0.682352941, b: 0.709803922}}];
+				line.strokes = [{type: 'SOLID', color: {r: 0.768627451, g: 0.768627451, b: 0.768627451}}];
 				line.opacity = 0.6;
 				nodes.push(line);
 
 				// create the type element
 				const text = figma.createText();
 				text.x = selectionX;
-				text.y = line.y - 75; // set the types y value to -75px from the line's y value
+				text.y = line.y - 95; // set the types y value to -75px from the line's y value
 				text.resize(selectionWidth, 50);
 				//text.fontName = { family: "Roboto", style: "Regular" }
 				text.fontName = { family: "Roboto", style: "Bold" }
