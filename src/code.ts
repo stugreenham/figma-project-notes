@@ -142,33 +142,45 @@ figma.ui.onmessage = async(msg) => {
 
 		// create the rectangle element
 		const rect = figma.createRectangle()
-		rect.resize(500, 500)
+		rect.resize(450, 450)
 		// check if the user wanted the green, yellow or red styling
 		if (msg.type === 'sticky-green') {
-			rect.fills = [{ type: 'SOLID', color: {r: 0.435294118, g: 0.811764706, b: 0.592156863}, opacity: 0.5 }];
-			rect.strokes = [{ blendMode: "NORMAL", color: {r: 0.396078431, g: 0.741176471, b: 0.541176471}, opacity: 0.4, type: "SOLID", visible: true }];
+			rect.fills = [{ type: 'SOLID', color: {r: 0.847058824, g: 1, b: 0.862745098}, opacity: 1 }];
 		}
 		if (msg.type === 'sticky-yellow') {
-			rect.fills = [{ type: 'SOLID', color: {r: 0.949019608, g: 0.788235294, b: 0.298039216},  opacity: 0.5 }];
-			rect.strokes = [{ blendMode: "NORMAL", color: {r: 0.898039216, g: 0.749019608, b: 0.282352941}, opacity: 0.4, type: "SOLID", visible: true }];
+			rect.fills = [{ type: 'SOLID', color: {r: 1, g: 0.921568627, b: 0.682352941},  opacity: 1 }];
 		}
 		if (msg.type === 'sticky-red') {
-			rect.fills = [{ type: 'SOLID', color: {r: 0.921568627, g: 0.341176471, b: 0.341176471}, opacity: 0.5 }];
-			rect.strokes = [{ blendMode: "NORMAL", color: {r: 0.721568627, g: 0.266666667, b: 0.266666667}, opacity: 0.2, type: "SOLID", visible: true }];
+			rect.fills = [{ type: 'SOLID', color: {r: 1, g: 0.858823529, b: 0.858823529}, opacity: 1 }];
 		}
-		rect.strokeWeight = 10;
+
+		// add the drop shadow effect
+		let dropShadowEffect: ShadowEffect = {
+			type: "DROP_SHADOW",
+			blendMode: 'NORMAL',
+			visible: true,
+			radius: 10,
+			color: {r: 0, g: 0, b: 0, a: 0.1},
+			offset: {
+				x: 0,
+				y: 4
+			}
+		}
+		rect.effects = [dropShadowEffect];
+
+		// apply the layout constraints
 		rect.constraints = { horizontal: "SCALE", vertical: "SCALE" };
 		nodes.push(rect)
 
 		// create the type element
 		const text = figma.createText();
-		text.x = rect.x + 40;
-		text.y = rect.y + 40;
-		text.resize(420, 420);
+		text.x = rect.x + 30;
+		text.y = rect.y + 30;
+		text.resize(390, 390);
 		text.fontName = { family: "Roboto", style: "Regular" }
-		text.fontSize = 36;
+		text.fontSize = 24;
 		text.paragraphSpacing = 20;
-		text.lineHeight = {unit: 'PIXELS', value: 46};
+		text.lineHeight = {unit: 'PIXELS', value: 38};
 		text.characters = "Enter Note Content...";
 		text.fills = [{type: 'SOLID', color: {r: 0.2, g: 0.2, b: 0.2}}]
 		text.textAlignVertical = "TOP";
@@ -177,12 +189,13 @@ figma.ui.onmessage = async(msg) => {
 
 		// create a frame element and append the type and rect elements before adding it to the center of the viewport
 		const frame = figma.createFrame();
-		frame.resize(500, 500);
+		frame.resize(450, 450);
 		frame.x = centerX;
 		frame.y = centerY;
 		frame.appendChild(rect);
 		frame.appendChild(text);
 		frame.name = "Sticky Note";
+		frame.clipsContent = false;
 	}
 
 
