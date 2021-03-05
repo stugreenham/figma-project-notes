@@ -55,6 +55,7 @@ input {
   text-align: left;
   font-size: 12px;
   line-height: 16px;
+  background: #fff;
 }
 
 .icon:after {
