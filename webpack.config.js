@@ -19,10 +19,10 @@ module.exports = (env, argv) => ({
       { test: /\.tsx?$/, use: 'ts-loader', exclude: /node_modules/ },
 
       // Enables including CSS by doing "import './file.css'" in your TypeScript code
-      { test: /\.css$/, loader: [{ loader: 'style-loader' }, { loader: 'css-loader' }] },
+      { test: /\.css$/, use: ['style-loader', { loader: 'css-loader' }] },
 
       // Allows you to use "<%= require('./file.svg') %>" in your HTML code to get a data URI
-      { test: /\.(png|jpg|gif|webp|svg)$/, loader: [{ loader: 'url-loader' }] },
+      { test: /\.(png|jpg|gif|webp|svg)$/, loader: 'url-loader' },
     ],
   },
 
@@ -32,6 +32,7 @@ module.exports = (env, argv) => ({
   output: {
     filename: '[name].js',
     path: path.resolve(__dirname, 'dist'), // Compile into a folder called "dist"
+    publicPath: '/', // https://figmaplugins.slack.com/archives/CPH2ZDK3J/p1634576426145700?thread_ts=1634161585.133600&cid=CPH2ZDK3J
   },
 
   // Tells Webpack to generate "ui.html" and to inline "ui.ts" into it
@@ -41,7 +42,8 @@ module.exports = (env, argv) => ({
       filename: 'ui.html',
       inlineSource: '.(js)$',
       chunks: ['ui'],
+      inject: 'body', // https://figmaplugins.slack.com/archives/CHPTY6TFD/p1624438572190700?thread_ts=1624401633.190100&cid=CHPTY6TFD
     }),
-    new HtmlWebpackInlineSourcePlugin(),
+    new HtmlWebpackInlineSourcePlugin(HtmlWebpackPlugin),
   ],
 })

@@ -155,7 +155,7 @@ figma.ui.onmessage = async(msg) => {
 		}
 
 		// add the drop shadow effect
-		let dropShadowEffect: ShadowEffect = {
+		let dropShadowEffect: Effect = {
 			type: "DROP_SHADOW",
 			blendMode: 'NORMAL',
 			visible: true,
