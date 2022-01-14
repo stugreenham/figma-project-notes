@@ -1,16 +1,18 @@
+import Mixpanel from "./mixpanel";
+
 figma.showUI(__html__, { width: 180, height: 384 });
+figma.ui.postMessage({
+	// post back the user data to the ui for mixpanel
+	type: 'identify', 
+	userID: figma.currentUser.id, 
+	username: figma.currentUser.name
+});
 
 figma.ui.onmessage = async(msg) => {
 
 	await figma.loadFontAsync({ family: "Roboto", style: "Regular" });
 	await figma.loadFontAsync({ family: "Roboto", style: "Bold" });
-	// console.log(msg.type);
-
-  // post the user id and name to the plugin for mixpanel
-  // https://figmaplugins.slack.com/archives/CHPTY6TFD/p1641641985013200?thread_ts=1641575674.012800&cid=CHPTY6TFD
-  figma.ui.postMessage({type: 'identify', userID: figma.currentUser.id, username: figma.currentUser.name});
-  
-
+	
 	// TITLE
 	//-------------------------------
 
@@ -21,7 +23,6 @@ figma.ui.onmessage = async(msg) => {
 
 			// if nothing is selected, show an error
 			figma.ui.postMessage({type: 'warning', warning: "no-layers"});
-      
 
 		} else {
 
