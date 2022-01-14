@@ -28,6 +28,15 @@ figma.ui.onmessage = async(msg) => {
 
 			// if something is selected, build the components
 
+			// post mixpanel event
+			var toolType;
+			if (msg.type === 'both') { toolType = "Title and Footnote"; } else { toolType = "Title"; }
+			figma.ui.postMessage({
+				type: 'action', 
+				tool: toolType, 
+				count: figma.currentPage.selection.length
+			});
+
 			// loop through all the items that are selected
 			for (const node of figma.currentPage.selection) {
 				//console.log(node);
@@ -97,6 +106,15 @@ figma.ui.onmessage = async(msg) => {
 
 			// if something is selected, build the components
 
+			// post mixpanel event
+			if (msg.type != 'both') {
+				figma.ui.postMessage({
+					type: 'action', 
+					tool: "Footnote", 
+					count: figma.currentPage.selection.length
+				});
+			}
+
 			// loop through all the items that are selected
 			for (const node of figma.currentPage.selection) {
 				//console.log(node);
@@ -139,6 +157,17 @@ figma.ui.onmessage = async(msg) => {
 	//-------------------------------
 
 	if (msg.type === 'sticky-green' || msg.type === 'sticky-yellow' || msg.type === 'sticky-red') {
+
+		// post mixpanel event
+		var color;
+		if (msg.type === 'sticky-green') { color = "Green" }
+		if (msg.type === 'sticky-yellow') { color = "Yellow" }
+		if (msg.type === 'sticky-red') { color = "Red" }
+		figma.ui.postMessage({
+			type: 'action', 
+			tool: "Sticky Note", 
+			color: color,
+		});
 
 		// grab the x and y values of the current viewport central point
 		const centerX = figma.viewport.center.x;
@@ -211,6 +240,13 @@ figma.ui.onmessage = async(msg) => {
 	//-------------------------------
 
 	if (msg.type === 'annotation') {
+		
+		// post mixpanel event
+		figma.ui.postMessage({
+			type: 'action', 
+			tool: "Annotation", 
+			position: "Left",
+		});
 
 		// grab the x and y values of the current viewport central point
 		const centerX = figma.viewport.center.x;
@@ -294,6 +330,13 @@ figma.ui.onmessage = async(msg) => {
 	//-------------------------------
 
 	if (msg.type === 'annotation-alt') {
+
+		// post mixpanel event
+		figma.ui.postMessage({
+			type: 'action', 
+			tool: "Annotation", 
+			position: "Right",
+		});
 
 		// grab the x and y values of the current viewport central point
 		const centerX = figma.viewport.center.x;
