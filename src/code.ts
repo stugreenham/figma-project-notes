@@ -6,6 +6,10 @@ figma.ui.onmessage = async(msg) => {
 	await figma.loadFontAsync({ family: "Roboto", style: "Bold" });
 	// console.log(msg.type);
 
+  // post the user id and name to the plugin for mixpanel
+  // https://figmaplugins.slack.com/archives/CHPTY6TFD/p1641641985013200?thread_ts=1641575674.012800&cid=CHPTY6TFD
+  figma.ui.postMessage({type: 'identify', userID: figma.currentUser.id, username: figma.currentUser.name});
+  
 
 	// TITLE
 	//-------------------------------
@@ -16,7 +20,8 @@ figma.ui.onmessage = async(msg) => {
 		if (figma.currentPage.selection.length === 0) {
 
 			// if nothing is selected, show an error
-			figma.ui.postMessage("no-layers");
+			figma.ui.postMessage({type: 'warning', warning: "no-layers"});
+      
 
 		} else {
 
@@ -84,7 +89,8 @@ figma.ui.onmessage = async(msg) => {
 		if (figma.currentPage.selection.length === 0) {
 
 			// if nothing is selected, show an error
-			figma.ui.postMessage("no-layers");
+			// figma.ui.postMessage("no-layers");
+      figma.ui.postMessage({type: 'warning', warning: "no-layers"});
 
 		} else {
 

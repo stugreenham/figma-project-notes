@@ -1,3 +1,9 @@
+import * as mixpanel from 'mixpanel-figma'
+mixpanel.init("d62616672bc5fbdc87eac6a549c96acb", {
+  disable_cookie: true,
+  disable_persistence: true
+})
+
 import './ui.css'
 
 document.getElementById('both').onclick = () => {
@@ -32,14 +38,18 @@ document.getElementById('annotation-alt').onclick = () => {
   parent.postMessage({ pluginMessage: { type: 'annotation-alt' } }, '*')
 }
 
-// Listen out for messages back from the sandbox
-onmessage = e => {
-	//@ts-ignore
-	var msg = event.data.pluginMessage;
-	if (msg === "no-layers") {
-		alert("No layers have been selected. Please select a text layer and try again.");
-	} else {
-		alert(msg);
-		console.log(msg);
+
+onmessage = (e) => {
+  const message = e.data.pluginMessage;
+  if(message.type == "identify"){
+       mixpanel.identify(message.userID);
+       mixpanel.people.set({ "Name": message.username });
+  }
+  if(message.type == "warning") {
+    if(message.warning === 'no-layers') {
+      alert("No layers have been selected. Please select a text layer and try again.");
+    } else {
+      alert(message.warning);
+    }
 	}
-};
+}
