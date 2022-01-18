@@ -311,16 +311,18 @@ figma.ui.onmessage = async(msg) => {
 
 		// create a frame element and append the type and rect elements before adding it to the center of the viewport
 		const frame = figma.createFrame();
-        frame.layoutMode = "VERTICAL";
 		frame.resize(450, 450);
 		frame.x = centerX;
 		frame.y = centerY;
+        // auto layout
+        frame.layoutMode = "VERTICAL";
         frame.primaryAxisSizingMode = "AUTO";
         frame.itemSpacing = 8;
         frame.paddingTop = 30;
         frame.paddingRight = 30;
         frame.paddingBottom = 30;
         frame.paddingLeft = 30;
+        // styling
         if (msg.type === 'sticky-green') {
 			frame.fills = [{ type: 'SOLID', color: {r: 0.847058824, g: 1, b: 0.862745098}, opacity: 1 }];
 		}
@@ -330,18 +332,13 @@ figma.ui.onmessage = async(msg) => {
 		if (msg.type === 'sticky-red') {
 			frame.fills = [{ type: 'SOLID', color: {r: 1, g: 0.858823529, b: 0.858823529}, opacity: 1 }];
 		}
-		
-        // add the drop shadow effect
 		let dropShadowEffect: Effect = {
 			type: "DROP_SHADOW",
 			blendMode: 'NORMAL',
 			visible: true,
 			radius: 10,
 			color: {r: 0, g: 0, b: 0, a: 0.1},
-			offset: {
-				x: 0,
-				y: 4
-			}
+			offset: {x: 0, y: 4}
 		}
         frame.effects = [dropShadowEffect];
         
@@ -353,17 +350,18 @@ figma.ui.onmessage = async(msg) => {
 	}
 
 
-
-	// ANNOTATION (LEFT)
+	// ANNOTATION
 	//-------------------------------
 
-	if (msg.type === 'annotation-left') {
+	if (msg.type === 'annotation-left' || msg.type === 'annotation-right') {
 		
 		// post mixpanel event
+        var toolPosition;
+        if (msg.type === 'annotation-left') { toolPosition = "Left" } else { toolPosition = "Right" }
         figma.ui.postMessage({
             type: 'action', 
             tool: "Annotation", 
-            position: "Left",
+            position: toolPosition,
         });
 
 		// grab the x and y values of the current viewport central point
@@ -371,11 +369,11 @@ figma.ui.onmessage = async(msg) => {
 		const centerY = figma.viewport.center.y;
 
 		// create an array to store the elements
-		const nodes = [];
+		// const discNodes = [];
+        //const contentNodes = [];
 
 		// grab all the existing annotations in the viewport, get the total and add one to set the new annotations count
 		const annotationCount = figma.currentPage.findAll(node => node.type === 'FRAME' && node.name.includes('annotation-')).length + 1;
-		//console.log(annotationCount);
 
 		// create the counter element
 
@@ -385,155 +383,94 @@ figma.ui.onmessage = async(msg) => {
 		disc.fills = [{ type: 'SOLID', color: {r: 0, g: 0, b: 0}, opacity: 1 }];
 		disc.constraints = { horizontal: "MIN", vertical: "MIN" };
 		disc.cornerRadius = 12;
-		nodes.push(disc);
+		// discNodes.push(disc);
 
 		// create the type for the counter
 		const number = figma.createText();
 		number.x = disc.x;
 		number.y = disc.y;
 		number.resize(24, 24);
+        // styling
 		number.fontName = { family: "Roboto", style: "Regular" }
 		number.fontSize = 12;
 		number.lineHeight = {unit: 'PIXELS', value: 12};
 		number.characters = annotationCount.toString();
 		number.fills = [{type: 'SOLID', color: {r: 1, g: 1, b: 1}}]
+        // constraints
 		number.textAlignVertical = "CENTER";
 		number.textAlignHorizontal = "CENTER";
 		number.constraints = { horizontal: "MIN", vertical: "MIN" };
-		nodes.push(number);
+		// discNodes.push(number);
+
+        // add the disc and number to a frame
+        const discFrame = figma.createFrame();
+        discFrame.resize(24, 24);
+        // append objects and name the frame
+		discFrame.appendChild(disc);
+        discFrame.appendChild(number);
+        discFrame.name = "disc";
 
 		// create the content element
 
-		// create the rectangle for the content background
-		const rect = figma.createRectangle();
-		rect.x = disc.x + 32;
-		rect.y = disc.y;
-		rect.resize(308, 60);
-		rect.fills = [{ type: 'SOLID', color: {r: 0, g: 0, b: 0}, opacity: 1 }];
-		rect.constraints = { horizontal: "STRETCH", vertical: "STRETCH" };
-		rect.cornerRadius = 6;
-		nodes.push(rect);
-
 		// create the type for the content text
 		const text = figma.createText();
-		text.x = rect.x + 12;
-		text.y = rect.y + 8;
-		text.resize(284, 44);
+        // styling
 		text.fontName = { family: "Roboto", style: "Regular" }
 		text.fontSize = 14;
 		text.paragraphSpacing = 10;
 		text.lineHeight = {unit: 'PIXELS', value: 20};
-		text.characters = "Add your annotation content here...";
+		text.characters = "Add your annotation content here...\n";
 		text.fills = [{type: 'SOLID', color: {r: 1, g: 1, b: 1}}];
-		text.textAlignVertical = "TOP";
-		text.constraints = { horizontal: "STRETCH", vertical: "STRETCH" };
-		nodes.push(text);
+        // auto layout
+        text.textAlignVertical = "TOP";
+        text.textAutoResize = "HEIGHT";
+        text.layoutAlign = "STRETCH";
+		//contentNodes.push(text);
+
+        // create the frame to store the content using autolayout to make sure it resizes
+        const contentFrame = figma.createFrame();
+        contentFrame.fills = [{ type: 'SOLID', color: {r: 0, g: 0, b: 0}, opacity: 1 }];
+        // styling
+        contentFrame.cornerRadius = 6;
+        // autolayout
+        contentFrame.layoutMode = "VERTICAL";
+        contentFrame.primaryAxisSizingMode = "AUTO";
+        contentFrame.counterAxisSizingMode = "AUTO";
+        contentFrame.layoutGrow = 1;
+        contentFrame.itemSpacing = 8;
+        contentFrame.paddingTop = 8;
+        contentFrame.paddingRight = 12;
+        contentFrame.paddingBottom = 8;
+        contentFrame.paddingLeft = 12;
+        // append objects and name the frame
+		contentFrame.appendChild(text);
+		contentFrame.name = "content"; // append the next count to the annotation title
 
 		// create a frame element and append the counter and content elements before adding it to the center of the viewport
 		const frame = figma.createFrame();
-		frame.resize(340, 60);
 		frame.x = centerX;
 		frame.y = centerY;
-		frame.fills = [{ type: 'SOLID', color: {r: 0, g: 0, b: 0}, opacity: 0 }];
-		frame.appendChild(disc);
-		frame.appendChild(number);
-		frame.appendChild(rect);
-		frame.appendChild(text);
+        // autolayout
+        frame.layoutMode = "HORIZONTAL";
+        frame.primaryAxisSizingMode = "AUTO";
+        // styling
+        frame.resize(340, 36);
+        frame.fills = [{ type: 'SOLID', color: {r: 0, g: 0, b: 0}, opacity: 0 }];
+        // autolayout cont. (this ordering is important)
+        frame.counterAxisSizingMode = "AUTO";
+        frame.itemSpacing = 8;
+        frame.layoutAlign = "STRETCH";
+        // append objects and name the frame
+        if (msg.type === 'annotation-left') {
+            frame.appendChild(discFrame);
+		    frame.appendChild(contentFrame);
+        } else {
+            frame.appendChild(contentFrame);
+            frame.appendChild(discFrame);
+        }
 		frame.name = "annotation-" + annotationCount; // append the next count to the annotation title
 	}
-
-
-
-	// ANNOTATION (RIGHT)
-	//-------------------------------
-
-	if (msg.type === 'annotation-right') {
-
-		// post mixpanel event
-        figma.ui.postMessage({
-            type: 'action', 
-            tool: "Annotation", 
-            position: "Right",
-        });
-
-		// grab the x and y values of the current viewport central point
-		const centerX = figma.viewport.center.x;
-		const centerY = figma.viewport.center.y;
-
-		// create an array to store the elements
-		const nodes = [];
-
-		// grab all the existing annotations in the viewport, get the total and add one to set the new annotations count
-		const annotationCount = figma.currentPage.findAll(node => node.type === 'FRAME' && node.name.includes('annotation-')).length + 1;
-
-		// create the content element
-
-		// create the rectangle for the content background
-		const rect = figma.createRectangle();
-		//rect.x = disc.x + 40;
-		//rect.y = disc.y;
-		rect.resize(308, 60);
-		rect.fills = [{ type: 'SOLID', color: {r: 0, g: 0, b: 0}, opacity: 1 }];
-		rect.constraints = { horizontal: "STRETCH", vertical: "STRETCH" };
-		rect.cornerRadius = 6;
-		nodes.push(rect);
-
-		// create the type for the content text
-		const text = figma.createText();
-		text.x = rect.x + 12;
-		text.y = rect.y + 8;
-		text.resize(284, 44);
-		text.fontName = { family: "Roboto", style: "Regular" }
-		text.fontSize = 14;
-		text.paragraphSpacing = 10;
-		text.lineHeight = {unit: 'PIXELS', value: 20};
-		text.characters = "Add your annotation content here...";
-		text.fills = [{type: 'SOLID', color: {r: 1, g: 1, b: 1}}];
-		text.textAlignVertical = "TOP";
-		text.constraints = { horizontal: "STRETCH", vertical: "STRETCH" };
-		nodes.push(text);
-
-		// create the counter element
-
-		// create the rectangle for the counter
-		const disc = figma.createRectangle();
-		disc.resize(24, 24);
-		disc.x = rect.x + 316;
-		disc.y = rect.y;
-		disc.fills = [{ type: 'SOLID', color: {r: 0, g: 0, b: 0}, opacity: 1 }];
-		disc.constraints = { horizontal: "MAX", vertical: "MIN" };
-		disc.cornerRadius = 12;
-		nodes.push(disc);
-
-		// create the type for the counter
-		const number = figma.createText();
-		number.x = disc.x;
-		number.y = disc.y;
-		number.resize(24, 24);
-		number.fontName = { family: "Roboto", style: "Regular" }
-		number.fontSize = 12;
-		number.lineHeight = {unit: 'PIXELS', value: 12};
-		number.characters = annotationCount.toString();
-		number.fills = [{type: 'SOLID', color: {r: 1, g: 1, b: 1}}]
-		number.textAlignVertical = "CENTER";
-		number.textAlignHorizontal = "CENTER";
-		number.constraints = { horizontal: "MAX", vertical: "MIN" };
-		nodes.push(number);
-
-		// create a frame element and append the counter and content elements before adding it to the center of the viewport
-		const frame = figma.createFrame();
-		frame.resize(340, 60);
-		frame.x = centerX;
-		frame.y = centerY;
-		frame.fills = [{ type: 'SOLID', color: {r: 0, g: 0, b: 0}, opacity: 0 }];
-		frame.appendChild(disc);
-		frame.appendChild(number);
-		frame.appendChild(rect);
-		frame.appendChild(text);
-		frame.name = "annotation-" + annotationCount; // append the next count to the annotation title
-	}
-
-
+    
 
     // ANNOTATION (SPLIT)
 	//-------------------------------
