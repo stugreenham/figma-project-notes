@@ -5,45 +5,81 @@ mixpanel.init("d62616672bc5fbdc87eac6a549c96acb", {
   disable_persistence: true
 })
 
-document.getElementById('both').onclick = () => {
-  parent.postMessage({ pluginMessage: { type: 'both' } }, '*')
-  // mixpanel.track("Object Added", {"Type": "Title and Footnote"});
+
+// TITLE AND FOOTNOTE
+//--------------------------------------------------------------
+
+// document.getElementById('both-small').onclick = () => {
+//   parent.postMessage({ pluginMessage: { type: 'both-small' } }, '*')
+// }
+// document.getElementById('both-medium').onclick = () => {
+//   parent.postMessage({ pluginMessage: { type: 'both-medium' } }, '*')
+// }
+// document.getElementById('both-large').onclick = () => {
+//   parent.postMessage({ pluginMessage: { type: 'both-large' } }, '*')
+// }
+
+// TITLES
+//--------------------------------------------------------------
+
+document.getElementById('title-small').onclick = () => {
+  parent.postMessage({ pluginMessage: { type: 'title-small' } }, '*')
+}
+document.getElementById('title-medium').onclick = () => {
+  parent.postMessage({ pluginMessage: { type: 'title-medium' } }, '*')
+}
+document.getElementById('title-large').onclick = () => {
+  parent.postMessage({ pluginMessage: { type: 'title-large' } }, '*')
 }
 
-document.getElementById('title').onclick = () => {
-  parent.postMessage({ pluginMessage: { type: 'title' } }, '*')
-  // mixpanel.track("Object Added", {"Type": "Title"});
+// FOOTNOTE
+//--------------------------------------------------------------
+
+document.getElementById('footnote-small').onclick = () => {
+  parent.postMessage({ pluginMessage: { type: 'footnote-small' } }, '*')
+}
+document.getElementById('footnote-medium').onclick = () => {
+  parent.postMessage({ pluginMessage: { type: 'footnote-medium' } }, '*')
+}
+document.getElementById('footnote-large').onclick = () => {
+  parent.postMessage({ pluginMessage: { type: 'footnote-large' } }, '*')
 }
 
-document.getElementById('footnote').onclick = () => {
-  parent.postMessage({ pluginMessage: { type: 'footnote' } }, '*')
-  // mixpanel.track("Object Added", {"Type": "Footnote"});
-}
+// STICKY NOTES
+//--------------------------------------------------------------
 
 document.getElementById('sticky-green').onclick = () => {
   parent.postMessage({ pluginMessage: { type: 'sticky-green' } }, '*')
-  // mixpanel.track("Object Added", {"Type": "Sticky Note", "Color": "Green"});
 }
-
 document.getElementById('sticky-yellow').onclick = () => {
   parent.postMessage({ pluginMessage: { type: 'sticky-yellow' } }, '*')
-  // mixpanel.track("Object Added", {"Type": "Sticky Note", "Color": "Yellow"});
 }
-
 document.getElementById('sticky-red').onclick = () => {
   parent.postMessage({ pluginMessage: { type: 'sticky-red' } }, '*')
-  // mixpanel.track("Object Added", {"Type": "Sticky Note", "Color": "Red"});
 }
 
-document.getElementById('annotation').onclick = () => {
-  parent.postMessage({ pluginMessage: { type: 'annotation' } }, '*')
-  // mixpanel.track("Object Added", {"Type": "Annotation", "Position": "Left"});
-}
+// ANNOTATIONS
+//--------------------------------------------------------------
 
-document.getElementById('annotation-alt').onclick = () => {
-  parent.postMessage({ pluginMessage: { type: 'annotation-alt' } }, '*')
-  // mixpanel.track("Object Added", {"Type": "Annotation", "Position": "Right"});
+document.getElementById('annotation-left').onclick = () => {
+  parent.postMessage({ pluginMessage: { type: 'annotation-left' } }, '*')
 }
+document.getElementById('annotation-right').onclick = () => {
+  parent.postMessage({ pluginMessage: { type: 'annotation-right' } }, '*')
+}
+// document.getElementById('annotation-split').onclick = () => {
+//   parent.postMessage({ pluginMessage: { type: 'annotation-split' } }, '*')
+// }
+
+// DIVIDERS
+//--------------------------------------------------------------
+
+// document.getElementById('divider-thick').onclick = () => {
+//   parent.postMessage({ pluginMessage: { type: 'divider-thick' } }, '*')
+// }
+// document.getElementById('divider-thin').onclick = () => {
+//   parent.postMessage({ pluginMessage: { type: 'divider-thin' } }, '*')
+// }
 
 
 onmessage = (e) => {
@@ -75,6 +111,7 @@ onmessage = (e) => {
       console.log("Other");
       mixpanel.track("Object Added", {
         "Type": message.tool,
+        "Size": message.size,
         "Count": message.count
       });
     }
