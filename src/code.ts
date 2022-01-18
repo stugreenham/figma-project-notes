@@ -1,5 +1,3 @@
-import Mixpanel from "./mixpanel";
-
 figma.showUI(__html__, { width: 180, height: 384 });
 figma.ui.postMessage({
 	// post back the user data to the ui for mixpanel
