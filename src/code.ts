@@ -1,5 +1,3 @@
-const logEvents = false;
-
 figma.showUI(__html__, { width: 264, height: 216 });
 figma.ui.postMessage({
 	// post back the user data to the ui for mixpanel
@@ -470,7 +468,7 @@ figma.ui.onmessage = async(msg) => {
         }
 		frame.name = "annotation-" + annotationCount; // append the next count to the annotation title
 	}
-    
+
 
     // ANNOTATION (SPLIT)
 	//-------------------------------
