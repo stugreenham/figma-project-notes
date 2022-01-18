@@ -282,21 +282,56 @@ figma.ui.onmessage = async(msg) => {
 		// create an array to store the elements
 		const nodes = []
 
-		// create the rectangle element
-		const rect = figma.createRectangle()
-		rect.resize(450, 450)
-		// check if the user wanted the green, yellow or red styling
-		if (msg.type === 'sticky-green') {
-			rect.fills = [{ type: 'SOLID', color: {r: 0.847058824, g: 1, b: 0.862745098}, opacity: 1 }];
+		// create the type element
+		const text = figma.createText();
+		text.resize(390, 390);
+		text.fontName = { family: "Roboto", style: "Regular" }
+		text.fontSize = 24;
+		text.paragraphSpacing = 20;
+		text.lineHeight = {unit: 'PIXELS', value: 38};
+		text.characters = "Enter your note content here...\n\n\n\n";
+		text.fills = [{type: 'SOLID', color: {r: 0.2, g: 0.2, b: 0.2}}]
+		text.textAlignVertical = "TOP";
+        text.textAutoResize = "HEIGHT";
+        text.layoutAlign = "STRETCH";
+		nodes.push(text);
+
+        // create the name type element
+		const name = figma.createText();
+		name.resize(390, 20);
+		name.fontName = { family: "Roboto", style: "Bold" }
+		name.fontSize = 20;
+		name.lineHeight = {unit: 'PIXELS', value: 20}
+		name.characters = username;
+		name.fills = [{type: 'SOLID', color: {r: 0.2, g: 0.2, b: 0.2}}]
+		name.textAlignVertical = "TOP";
+		name.textAlignHorizontal = "RIGHT";
+        name.layoutAlign = "STRETCH";
+		nodes.push(name);
+
+		// create a frame element and append the type and rect elements before adding it to the center of the viewport
+		const frame = figma.createFrame();
+        frame.layoutMode = "VERTICAL";
+		frame.resize(450, 450);
+		frame.x = centerX;
+		frame.y = centerY;
+        frame.primaryAxisSizingMode = "AUTO";
+        frame.itemSpacing = 8;
+        frame.paddingTop = 30;
+        frame.paddingRight = 30;
+        frame.paddingBottom = 30;
+        frame.paddingLeft = 30;
+        if (msg.type === 'sticky-green') {
+			frame.fills = [{ type: 'SOLID', color: {r: 0.847058824, g: 1, b: 0.862745098}, opacity: 1 }];
 		}
 		if (msg.type === 'sticky-yellow') {
-			rect.fills = [{ type: 'SOLID', color: {r: 1, g: 0.921568627, b: 0.682352941},  opacity: 1 }];
+			frame.fills = [{ type: 'SOLID', color: {r: 1, g: 0.921568627, b: 0.682352941},  opacity: 1 }];
 		}
 		if (msg.type === 'sticky-red') {
-			rect.fills = [{ type: 'SOLID', color: {r: 1, g: 0.858823529, b: 0.858823529}, opacity: 1 }];
+			frame.fills = [{ type: 'SOLID', color: {r: 1, g: 0.858823529, b: 0.858823529}, opacity: 1 }];
 		}
-
-		// add the drop shadow effect
+		
+        // add the drop shadow effect
 		let dropShadowEffect: Effect = {
 			type: "DROP_SHADOW",
 			blendMode: 'NORMAL',
@@ -308,48 +343,9 @@ figma.ui.onmessage = async(msg) => {
 				y: 4
 			}
 		}
-		rect.effects = [dropShadowEffect];
-
-		// apply the layout constraints
-		rect.constraints = { horizontal: "SCALE", vertical: "SCALE" };
-		nodes.push(rect)
-
-		// create the type element
-		const text = figma.createText();
-		text.x = rect.x + 30;
-		text.y = rect.y + 30;
-		text.resize(390, 390);
-		text.fontName = { family: "Roboto", style: "Regular" }
-		text.fontSize = 24;
-		text.paragraphSpacing = 20;
-		text.lineHeight = {unit: 'PIXELS', value: 38};
-		text.characters = "Enter Note Content...";
-		text.fills = [{type: 'SOLID', color: {r: 0.2, g: 0.2, b: 0.2}}]
-		text.textAlignVertical = "TOP";
-		text.constraints = { horizontal: "STRETCH", vertical: "STRETCH" };
-		nodes.push(text);
-
-        // create the name type element
-		const name = figma.createText();
-		name.x = rect.x + 30;
-		name.y = rect.y + 400;
-		name.resize(390, 20);
-		name.fontName = { family: "Roboto", style: "Bold" }
-		name.fontSize = 20;
-		name.lineHeight = {unit: 'PIXELS', value: 20}
-		name.characters = username;
-		name.fills = [{type: 'SOLID', color: {r: 0.2, g: 0.2, b: 0.2}}]
-		name.textAlignVertical = "TOP";
-		name.textAlignHorizontal = "RIGHT";
-		name.constraints = { horizontal: "STRETCH", vertical: "MAX" };
-		nodes.push(name);
-
-		// create a frame element and append the type and rect elements before adding it to the center of the viewport
-		const frame = figma.createFrame();
-		frame.resize(450, 450);
-		frame.x = centerX;
-		frame.y = centerY;
-		frame.appendChild(rect);
+        frame.effects = [dropShadowEffect];
+        
+        // append objects to the frame
 		frame.appendChild(text);
         frame.appendChild(name);
 		frame.name = "Sticky Note";
