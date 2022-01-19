@@ -90,6 +90,7 @@ onmessage = (e) => {
   if(message.type == "identify"){
     mixpanel.identify(message.userID);
     mixpanel.people.set({ "Name": message.username });
+    mixpanel.people.set({ "Version": "10" });
     mixpanel.track("Plugin Started");
   }
 
