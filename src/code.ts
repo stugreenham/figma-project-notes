@@ -343,8 +343,9 @@ figma.ui.onmessage = async(msg) => {
         // append objects to the frame
 		frame.appendChild(text);
         frame.appendChild(name);
-		frame.name = "Sticky Note";
+		frame.name = "sticky-note";
 		frame.clipsContent = false;
+        frame.expanded = false;
 	}
 
 
@@ -467,6 +468,7 @@ figma.ui.onmessage = async(msg) => {
             frame.appendChild(discFrame);
         }
 		frame.name = "annotation-" + annotationCount; // append the next count to the annotation title
+        frame.expanded = false;
 	}
 
 
