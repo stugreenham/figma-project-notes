@@ -78,7 +78,7 @@ figma.ui.onmessage = async(msg) => {
 				text.fontSize = 80; 
 				text.letterSpacing = {unit: 'PIXELS', value: -1};
 			}
-			var textChars = "Frame Title";
+			var textChars = "Enter Title...";
 			text.characters = textChars;
 			text.textAlignVertical = "BOTTOM";
 			text.textAutoResize = "HEIGHT";
@@ -144,7 +144,7 @@ figma.ui.onmessage = async(msg) => {
 					text.fontSize = 80; 
 					text.letterSpacing = {unit: 'PIXELS', value: -1};
 				}
-				var textChars = "Frame Title";
+				var textChars = "Enter Title...";
 				text.characters = textChars;
 				text.textAlignVertical = "BOTTOM";
 				text.textAutoResize = "HEIGHT";
