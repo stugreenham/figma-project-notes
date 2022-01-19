@@ -1,3 +1,11 @@
+![Project Notes header image](images/artwork.png?raw=true "Project Notes")
+
+# Project Notes
+'Project Notes' helps you keep your project organised with easy to access titles, footnotes and stickies for all your artboards.
+
+[Figma Plugin Install Link](https://www.figma.com/community/plugin/814117528089546244)
+
+<!--
 Below are the steps to get your plugin running. You can also find instructions at:
 
   https://www.figma.com/plugin-docs/setup/
@@ -38,3 +46,4 @@ We recommend writing TypeScript code using Visual Studio code:
     you reopen Visual Studio Code.
 
 That's it! Visual Studio Code will regenerate the JavaScript file every time you save.
+-->
