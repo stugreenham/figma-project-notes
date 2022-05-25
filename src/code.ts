@@ -97,8 +97,10 @@ figma.ui.onmessage = async(msg) => {
 			for (const node of figma.currentPage.selection) {
 
 				// grab the current selection's x, y, width and name values
-				const selectionX = node.x;
-				const selectionY = node.y;
+				//const selectionX = node.x // Replaced with below as this gives the true x value relative to the canvas. Node.x doesn't work when items are located within a parent frame
+				const selectionX = node.absoluteTransform[0][2];
+				//const selectionY = node.y // Replaced with below as this gives the true y value relative to the canvas. Node.y doesn't work when items are located within a parent frame
+				const selectionY = node.absoluteTransform[1][2];
 				const selectionWidth = node.width;
 				const selectionName = node.name;
 
@@ -219,11 +221,14 @@ figma.ui.onmessage = async(msg) => {
 			for (const node of figma.currentPage.selection) {
 
 				// grab the current selection's x, y, width, height and name values
-				const selectionX = node.x
-				const selectionY = node.y
+				//const selectionX = node.x // Replaced with below as this gives the true x value relative to the canvas. Node.x doesn't work when items are located within a parent frame
+				const selectionX = node.absoluteTransform[0][2];
+				//const selectionY = node.y // Replaced with below as this gives the true y value relative to the canvas. Node.y doesn't work when items are located within a parent frame
+				const selectionY = node.absoluteTransform[1][2];
 				const selectionWidth = node.width
 				const selectionHeight = node.height
 				const selectionName = node.name
+				console.log('selectionName:' + selectionName)
 
 				// create an array to store the elements
 				const nodes = []
