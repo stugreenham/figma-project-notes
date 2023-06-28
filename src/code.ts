@@ -381,18 +381,9 @@ figma.ui.onmessage = async(msg) => {
 
 		// create the counter element
 
-		// create the rectangle for the counter
-		const disc = figma.createRectangle();
-		disc.resize(24, 24);
-		disc.fills = [{ type: 'SOLID', color: {r: 0, g: 0, b: 0}, opacity: 1 }];
-		disc.constraints = { horizontal: "MIN", vertical: "MIN" };
-		disc.cornerRadius = 12;
-		// discNodes.push(disc);
-
 		// create the type for the counter
 		const number = figma.createText();
-		number.x = disc.x;
-		number.y = disc.y;
+
 		number.resize(24, 24);
         // styling
 		number.fontName = { family: "Roboto", style: "Regular" }
@@ -404,15 +395,15 @@ figma.ui.onmessage = async(msg) => {
 		number.textAlignVertical = "CENTER";
 		number.textAlignHorizontal = "CENTER";
 		number.constraints = { horizontal: "MIN", vertical: "MIN" };
-		// discNodes.push(number);
 
-        // add the disc and number to a frame
-        const discFrame = figma.createFrame();
-        discFrame.resize(24, 24);
-        // append objects and name the frame
-		discFrame.appendChild(disc);
-        discFrame.appendChild(number);
-        discFrame.name = "disc";
+		// add the disc and number to a frame
+		const discFrame = figma.createFrame();
+		discFrame.resize(24, 24);
+		// append objects and name the frame
+		discFrame.appendChild(number);
+		discFrame.fills = [{ type: 'SOLID', color: {r: 0, g: 0, b: 0}, opacity: 1 }];
+		discFrame.cornerRadius = 12;
+		discFrame.name = "disc";
 
 		// create the content element
 
@@ -425,6 +416,7 @@ figma.ui.onmessage = async(msg) => {
 		text.lineHeight = {unit: 'PIXELS', value: 20};
 		text.characters = "Add your annotation content here...\n";
 		text.fills = [{type: 'SOLID', color: {r: 1, g: 1, b: 1}}];
+		text.resize(284, 50);
         // auto layout
         text.textAlignVertical = "TOP";
         text.textAutoResize = "HEIGHT";
@@ -454,26 +446,26 @@ figma.ui.onmessage = async(msg) => {
 		const frame = figma.createFrame();
 		frame.x = centerX;
 		frame.y = centerY;
-        // autolayout
-        frame.layoutMode = "HORIZONTAL";
-        frame.primaryAxisSizingMode = "AUTO";
-        // styling
-        frame.resize(340, 36);
-        frame.fills = [{ type: 'SOLID', color: {r: 0, g: 0, b: 0}, opacity: 0 }];
-        // autolayout cont. (this ordering is important)
-        frame.counterAxisSizingMode = "AUTO";
-        frame.itemSpacing = 8;
-        frame.layoutAlign = "STRETCH";
-        // append objects and name the frame
-        if (msg.type === 'annotation-left') {
-            frame.appendChild(discFrame);
-		    frame.appendChild(contentFrame);
-        } else {
-            frame.appendChild(contentFrame);
-            frame.appendChild(discFrame);
-        }
+		// autolayout
+		frame.layoutMode = "HORIZONTAL";
+		frame.primaryAxisSizingMode = "AUTO";
+		// styling
+		frame.resize(340, 36);
+		frame.fills = [{ type: 'SOLID', color: {r: 0, g: 0, b: 0}, opacity: 0 }];
+		// autolayout cont. (this ordering is important)
+		frame.counterAxisSizingMode = "AUTO";
+		frame.itemSpacing = 8;
+		frame.layoutAlign = "STRETCH";
+		// append objects and name the frame
+		if (msg.type === 'annotation-left') {
+			frame.appendChild(discFrame);
+			frame.appendChild(contentFrame);
+		} else {
+			frame.appendChild(contentFrame);
+			frame.appendChild(discFrame);
+		}
 		frame.name = "annotation-" + annotationCount; // append the next count to the annotation title
-        frame.expanded = false;
+		frame.expanded = false;
 	}
 
 
